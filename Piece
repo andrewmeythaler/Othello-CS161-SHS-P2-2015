@@ -1,0 +1,45 @@
+import java.awt.Graphics;
+
+
+public class Piece {
+	final int p1 = 0;
+	final int p2 = 1;
+	final int blank = 2;
+	int player; //The player who owns the space
+	int locationX;
+	int locationY;
+	public Piece()
+	{
+		int player = 2; //Defaults to no ownership, blank tile
+		int locationX = 0; //Defaults to 0,0. Will likely be set in a for loop in the main.
+		int locationY = 0;
+	}
+	public void setPlayer(int IN)
+	{
+		player = IN;
+	}
+	public void setLocationX(int IN)
+	{
+		locationX = IN;
+	}
+	public void setLocationY(int IN)
+	{
+		locationY = IN;
+	}
+	public int getPlayer()
+	{
+		return player;
+	}
+	public int getLocationX()
+	{
+		return locationX;
+	}
+	public int getLocationY()
+	{
+		return locationY;
+	}
+	public void paintMe(Graphics G) //Default paint
+	{
+		//To be filled in later
+	}
+}
