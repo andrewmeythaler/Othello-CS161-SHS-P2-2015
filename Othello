@@ -1,11 +1,50 @@
+import java.awt.Container;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 public class Othello {
-
-	/**
-	 * @param args
-	 */
+	final int p1 = 0;
+	final int p2 = 1;
+	final int p3 = 2;
+	String p1_name = "Player 1 name";
+	String p2_name = "Player 2 name";
+	String p1_score = " ";
+	String p2_score = " ";
+	String p1_pieces = " ";
+	String p2_pieces = " ";
+	String turn = " ";
+	int p1_score_int; //All to be made into strings later
+	int p2_score_int;
+	int p1_pieces_int;
+	int p2_pieces_int;
+	int turn_int;
+	boolean p2_human = false;
+	JFrame frame = new JFrame();
+	JTextField P1name = new JTextField(p1_name);
+	JLabel P1pieces = new JLabel(p1_pieces);
+	JLabel P1score = new JLabel(p1_score);
+	Container center = new Container();
+	Container south = new Container();
+	Container west = new Container();
+	JTextField P2name = new JTextField(p2_name);
+	JLabel P2pieces = new JLabel();
+	JLabel P2score = new JLabel();
+	JButton restart = new JButton();
+	JButton P2drop_in = new JButton();
+	/*PieceIndicator P1indicator = new PieceIndicator();
+	 * Out entirely optional stretch goals.
+	 * Likely not needed but if we have extra time who knows.
+	 * They will remain commented for now.
+	PieceIndicator P2indicator = new PieceIndicator();*/
+	JButton[][] Board = new JButton[8][8];
+	//Piece[][] tiles = new Piece[8][8];
+	//^Will remain commented until the object class is complete
+	JLabel Turn = new JLabel(turn);
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		new Othello();
 
 	}
 
