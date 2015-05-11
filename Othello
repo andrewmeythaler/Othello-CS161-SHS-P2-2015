@@ -1,58 +1,88 @@
+import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-public class Othello {
-	final int p1 = 0;
-	final int p2 = 1;
-	final int p3 = 2;
-	String p1_name = "Player 1 name";
-	String p2_name = "Player 2 name";
-	String p1_score = " ";
-	String p2_score = " ";
-	String p1_pieces = " ";
-	String p2_pieces = " ";
-	String turn = " ";
-	int p1_score_int; //All to be made into strings later
-	int p2_score_int;
-	int p1_pieces_int;
-	int p2_pieces_int;
-	int turn_int;
-	boolean p2_human = false;
-	JFrame frame = new JFrame();
-	JTextField P1name = new JTextField(p1_name);
-	JLabel P1pieces = new JLabel(p1_pieces);
-	JLabel P1score = new JLabel(p1_score);
-	Container center = new Container();
-	Container south = new Container();
-	Container west = new Container();
-	JTextField P2name = new JTextField(p2_name);
-	JLabel P2pieces = new JLabel();
-	JLabel P2score = new JLabel();
-	JButton restart = new JButton();
-	JButton P2drop_in = new JButton();
-	/*PieceIndicator P1indicator = new PieceIndicator();
-	 * Out entirely optional stretch goals.
-	 * Likely not needed but if we have extra time who knows.
-	 * They will remain commented for now.
-	PieceIndicator P2indicator = new PieceIndicator();*/
-	JButton[][] Board = new JButton[8][8];
-	//Piece[][] tiles = new Piece[8][8];
-	//^Will remain commented until the object class is complete
-	JLabel Turn = new JLabel(turn);
+/*
+	Name: Alexander Niebur, Andrew Meythaler
+	Date: 5/11/2015
+	Project: Reversi/Othello
+*/
+public class Othello implements ActionListener {
+	//Variables
+		//Standard Variables(Ints and booleans)
+		final int p1 = 0;
+		final int p2 = 1;
+		final int BLANK = 2;
+		int turn = 0;
+		String p1_score = "";
+		String p2_score = "";
+		int p1_score_int = 2;
+		int p2_score_int = 2;
+		boolean p2_human = false;
+		//Frame related Variables
+		JFrame frame = new JFrame();
+		JTextField p1_name = new JTextField("Player One");
+		JTextField p2_name = new JTextField("Player Two");
+		JLabel P1score = new JLabel(p1_score);
+		JLabel P2score = new JLabel(p2_score);
+		JButton restart = new JButton("Restart");
+		JButton[][] board = new JButton[8][8];
+		Container west = new Container();
+		Container center = new Container();
+	//End Variables
+	public Othello(){
+		frame.setSize(1280, 720);
+		frame.setLayout(new BorderLayout());
+		center.setLayout(new GridLayout(8, 8));
+		for (int x = 0; x < board.length; x++) {
+			for (int y = 0; y < board[0].length; y++) {
+				board[x][y] = new JButton();
+				center.add(board[x][y]);
+				board[x][y].addActionListener(this);
+			}
+		}
+		frame.add(center, BorderLayout.CENTER);
+		west.setLayout(new GridLayout(5,1));
+		west.add(p1_name);
+		west.add(p2_name);
+		west.add(P1score);
+		west.add(P2score);
+		west.add(restart);
+		restart.addActionListener(this);
+		frame.add(west, BorderLayout.WEST);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+	}
 	public static void main(String[] args) {
 		new Othello();
-
 	}
-	public void textSet()
-	{
-		p1_score = Integer.toString(p1_score_int);
-		p2_score = Integer.toString(p2_score_int);
-		p1_pieces = Integer.toString(p1_pieces_int);
-		p2_pieces = Integer.toString(p2_pieces_int);
-		turn = Integer.toString(turn_int);
+	
+	
+	public void reset(){
+		p1_score_int = 2;
+		p2_score_int = 2;
+		turn = 0;
+		//Clear the board of all pieces
 	}
 
+	public void actionPerformed(ActionEvent event) {
+		if(event.getSource().equals(restart)){
+			reset();
+		}
+		else{
+			for (int x = 0; x < board.length; x++) {
+				for (int y = 0; y < board[0].length; y++) {
+					if(event.getSource().equals(board[x][y])){
+						board[x][y].setText("TEST");
+					}
+				}
+			}
+		}
+	}
 }
