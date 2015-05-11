@@ -47,5 +47,13 @@ public class Othello {
 		new Othello();
 
 	}
+	public void textSet()
+	{
+		p1_score = Integer.toString(p1_score_int);
+		p2_score = Integer.toString(p2_score_int);
+		p1_pieces = Integer.toString(p1_pieces_int);
+		p2_pieces = Integer.toString(p2_pieces_int);
+		turn = Integer.toString(turn_int);
+	}
 
 }
