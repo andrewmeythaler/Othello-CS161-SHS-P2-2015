@@ -3,8 +3,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Othello {
+public class Othello implements ActionListener {
 	final int p1 = 0;
 	final int p2 = 1;
 	final int p3 = 2;
@@ -39,9 +42,35 @@ public class Othello {
 	 * They will remain commented for now.
 	PieceIndicator P2indicator = new PieceIndicator();*/
 	JButton[][] Board = new JButton[8][8];
-	//Piece[][] tiles = new Piece[8][8];
-	//^Will remain commented until the object class is complete
+	Piece[][] tiles = new Piece[8][8];
 	JLabel Turn = new JLabel(turn);
+	
+	public Othello(){
+		frame.setSize(1280, 720);
+		frame.setLayout(new BorderLayout());
+		center.setLayout(new GridLayout(8, 8));
+		for (int x = 0; x < board.length; x++)
+		{
+			for (int y = 0; y < board[0].length; y++)
+			{
+				board[x][y] = new Piece();
+				center.add(board[x][y]);
+				board[x][y].addActionListener(this);
+			}
+		}
+		frame.add(center, BorderLayout.CENTER);
+		west.setLayout(new GridLayout(5,1));
+		west.add(P1name);
+		west.add(P2name);
+		west.add(P1score);
+		west.add(P2score);
+		west.add(restart);
+		restart.addActionListener(this);
+		frame.add(west, BorderLayout.WEST);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+	}
+	
 	public static void main(String[] args) {
 		new Othello();
 
@@ -54,5 +83,24 @@ public class Othello {
 		p2_pieces = Integer.toString(p2_pieces_int);
 		turn = Integer.toString(turn_int);
 	}
-
+	public void reset(){
+		p1_score_int = 2;
+		p2_score_int = 2;
+		turn = 0;
+		//Clear the board of all pieces
+	}
+	public void actionPerformed(ActionEvent event) {
+		if(event.getSource().equals(restart)){
+			reset();
+		}
+		else{
+			for (int x = 0; x < board.length; x++) {
+				for (int y = 0; y < board[0].length; y++) {
+					if(event.getSource().equals(board[x][y])){
+						board[x][y].setText("TEST");
+					}
+				}
+			}
+		}
+	}
 }
