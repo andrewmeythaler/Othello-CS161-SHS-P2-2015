@@ -8,9 +8,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Othello implements ActionListener {
-	final int p1 = 0;
-	final int p2 = 1;
-	final int p3 = 2;
+	final int P1 = 0;
+	final int P2 = 1;
+	final int BLANK = 2;
 	String p1_name = "Player 1 name";
 	String p2_name = "Player 2 name";
 	String p1_score = " ";
@@ -32,16 +32,16 @@ public class Othello implements ActionListener {
 	Container south = new Container();
 	Container west = new Container();
 	JTextField P2name = new JTextField(p2_name);
-	JLabel P2pieces = new JLabel();
-	JLabel P2score = new JLabel();
-	JButton restart = new JButton();
+	JLabel P2pieces = new JLabel(p2_pieces);
+	JLabel P2score = new JLabel(p2_score);
+	JButton restart = new JButton("Restart");
 	JButton P2drop_in = new JButton();
 	/*PieceIndicator P1indicator = new PieceIndicator();
 	 * Out entirely optional stretch goals.
 	 * Likely not needed but if we have extra time who knows.
 	 * They will remain commented for now.
 	PieceIndicator P2indicator = new PieceIndicator();*/
-	JButton[][] Board = new JButton[8][8];
+	JButton[][] board = new JButton[8][8];
 	Piece[][] tiles = new Piece[8][8];
 	JLabel Turn = new JLabel(turn);
 	
