@@ -99,7 +99,7 @@ public class Othello implements ActionListener, MouseListener { //Added mouse li
 	{
 		for(int a = x; a < tiles.length; a++)
 		{
-			if(tiles[x][a].getPlayer() == BLANK)
+			if(tiles[x][a].getPlayer() != turn_int)
 			{
 				if(tiles[x][a-1].getPlayer() == turn_int)
 				{
@@ -112,7 +112,7 @@ public class Othello implements ActionListener, MouseListener { //Added mouse li
 		}
 		for(int b = x; b > -1; b--)
 		{
-			if(tiles[x][b].getPlayer() == BLANK)
+			if(tiles[x][b].getPlayer() != turn_int)
 			{
 				if(tiles[x][b+1].getPlayer() == turn_int)
 				{
@@ -125,7 +125,7 @@ public class Othello implements ActionListener, MouseListener { //Added mouse li
 		}
 		for(int c = y; c < tiles[x].length; c++)
 		{
-			if(tiles[c][y].getPlayer() == BLANK)
+			if(tiles[c][y].getPlayer() != turn_int)
 			{
 				if(tiles[c-1][y].getPlayer() == turn_int)
 				{
@@ -138,7 +138,7 @@ public class Othello implements ActionListener, MouseListener { //Added mouse li
 		}
 		for(int d = y; d > -1; d--)
 		{
-			if(tiles[d][y].getPlayer() == BLANK)
+			if(tiles[d][y].getPlayer() != turn_int)
 			{
 				if(tiles[d+1][y].getPlayer() == turn_int)
 				{
