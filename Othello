@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class Othello implements ActionListener, MouseListener { //Added mouse listener for move previews
+public class Othello implements ActionListener, MouseListener {
 	final int P1 = 0;
 	final int P2 = 1;
 	final int BLANK = 2;
@@ -60,8 +60,8 @@ public class Othello implements ActionListener, MouseListener { //Added mouse li
 				board[x][y] = new JButton();
 				center.add(board[x][y]);
 				board[x][y].addActionListener(this);
-				board[x][y].addMouseListener(this); //All buttons are given mouse listeners so they know when
-			}						//they are being hovered over
+				board[x][y].addMouseListener(this);
+			}
 		}
 		frame.add(center, BorderLayout.CENTER);
 		west.setLayout(new GridLayout(5,1));
@@ -95,56 +95,381 @@ public class Othello implements ActionListener, MouseListener { //Added mouse li
 		turn_int = 0;
 		//Clear the board of all pieces
 	}
-	public void check(int x, int y)
+	public void check1(int x, int y) //Default check method. Checks from point A to the left.
 	{
+		/*
+		 * OOOOO	OOOOO	OOOOO
+		 * OOOOO	OOOOO	OOOOO
+		 * OOOOO	OOOOO	OOOOO
+		 * OXOOX	OX->X	OXXXX
+		 * OOOOO    OOOOO	OOOOO
+		 */
 		for(int a = x; a < tiles.length; a++)
 		{
-			if(tiles[x][a].getPlayer() != turn_int)
+			if(tiles[a][y].getPlayer() != turn_int)
 			{
-				if(tiles[x][a-1].getPlayer() == turn_int)
+				if(tiles[a-1][y].getPlayer() == turn_int)
 				{
 					for(int e = x; e < tiles.length; e++)
 					{
-						tiles[x][e].setPlayer(turn_int);
+						if(tiles[e][y].getPlayer() != turn_int)
+						{
+							if(tiles[e][y].getPlayer() != BLANK)
+							{
+								tiles[e][y].setPlayer(turn_int);
+							}
+							else
+							{
+								return;
+							}
+						}
 					}
 				}
 			}
 		}
+	}
+	public void check2(int x, int y) //2nd check method. Checks from point A to the right.
+	{
+		/*
+		 * OOOOO	OOOOO	OOOOO
+		 * OOOOO	OOOOO	OOOOO
+		 * OOOOO	OOOOO	OOOOO
+		 * OXOOX	OX<-X	OX<-X
+		 * OOOOO    OOOOO	OOOOO
+		 */
 		for(int b = x; b > -1; b--)
 		{
-			if(tiles[x][b].getPlayer() != turn_int)
+			if(tiles[b][y].getPlayer() != turn_int)
 			{
-				if(tiles[x][b+1].getPlayer() == turn_int)
+				if(tiles[b+1][y].getPlayer() == turn_int)
 				{
-					for(int f = x; f < tiles.length; f++)
+					for(int f = x; f > tiles.length; f--)
 					{
-						tiles[x][f].setPlayer(turn_int);
+						if(tiles[f][y].getPlayer() != turn_int)
+						{
+							if(tiles[f][y].getPlayer() != BLANK)
+							{
+								tiles[f][y].setPlayer(turn_int);
+							}
+							else
+							{
+								return;
+							}
+						}
 					}
 				}
 			}
 		}
+	}
+	public void check3(int x, int y) //3rd check method. Checks from point A down.
+	{
+		/*
+		 * OxOOO	OXOOO	OXOOO
+		 * OOOOO	O|OOO	OXOOO
+		 * OOOOO	OVOOO	OXOOO
+		 * OXOOO	OXOOO	OXOOO
+		 * OOOOO    OOOOO	OOOOO
+		 */
 		for(int c = y; c < tiles[x].length; c++)
 		{
 			if(tiles[c][y].getPlayer() != turn_int)
 			{
 				if(tiles[c-1][y].getPlayer() == turn_int)
 				{
-					for(int g = x; g < tiles.length; g++)
+					for(int g = y; g < tiles[x].length; g++)
 					{
-						tiles[g][y].setPlayer(turn_int);
+						if(tiles[g][y].getPlayer() != turn_int)
+						{
+							if(tiles[g][y].getPlayer() != BLANK)
+							{
+								tiles[g][y].setPlayer(turn_int);
+							}
+							else
+							{
+								return;
+							}
+						}
 					}
 				}
 			}
 		}
+	}
+	public void check4(int x, int y) //4th check method. Checks from point A up.
+	{
+		/*
+		 * OxOOO	OXOOO	OXOOO
+		 * OOOOO	O^OOO	OXOOO
+		 * OOOOO	O|OOO	OXOOO
+		 * OXOOO	OXOOO	OXOOO
+		 * OOOOO    OOOOO	OOOOO
+		 */
 		for(int d = y; d > -1; d--)
 		{
 			if(tiles[d][y].getPlayer() != turn_int)
 			{
 				if(tiles[d+1][y].getPlayer() == turn_int)
 				{
-					for(int h = x; h < tiles.length; h++)
+					for(int h = y; h > tiles[x].length; h--)
 					{
-						tiles[h][y].setPlayer(turn_int);
+						if(tiles[h][y].getPlayer() != turn_int)
+						{
+							if(tiles[h][y].getPlayer() != BLANK)
+							{
+								tiles[h][y].setPlayer(turn_int);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	public void check5(int x, int y) //5th check method. Checks diagonally from point A down and to the right.
+	{
+		/*
+		 * XOOOO	XOOOO	XOOOO
+		 * OOOOO	O\OOO	OXOOO
+		 * OOOOO	OO\OO	OOXOO
+		 * OOOOO	OOO\O	OOOXO
+		 * OOOOX    OOOOX	OOOOX
+		 */
+		if(tiles.length-0 > tiles[x].length-y)
+		{
+			for(int i = 0; i < tiles.length-x; i++)
+			{
+				if(tiles[x+i][y+i].getPlayer() != turn_int)
+				{
+					if(tiles[x+i-1][y+i-1].getPlayer() == turn_int)
+					{
+						for(int j = 0; j < tiles.length-x; j++)
+						{
+							if(tiles[x+j][y+j].getPlayer() != turn_int)
+							{
+								if(tiles[x+j][y+j].getPlayer() != BLANK)
+								{
+									tiles[x+j][y+j].setPlayer(turn_int);
+								}
+								else
+								{
+									return;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			for(int k = 0; k < tiles[x].length-y; k++)
+			{
+				if(tiles[x+k][y+k].getPlayer() != turn_int)
+				{
+					if(tiles[x+k-1][y+k-1].getPlayer() == turn_int)
+					{
+						for(int l = 0; l < tiles[x].length; l++)
+						{
+							if(tiles[x+l][y+l].getPlayer() != turn_int)
+							{
+								if(tiles[x+l][y+l].getPlayer() != BLANK)
+								{
+									tiles[x+l][y+l].setPlayer(turn_int);
+								}
+								else
+								{
+									return;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	public void check6(int x, int y) //6th check method. Checks diagonally from point A up and to the left.
+	{
+		/*
+		 * XOOOO	XOOOO	XOOOO
+		 * OOOOO	O\OOO	OXOOO
+		 * OOOOO	OO\OO	OOXOO
+		 * OOOOO	OOO\O	OOOXO
+		 * OOOOX    OOOOX	OOOOX
+		 */
+		if(-(x-tiles.length) > -(y-tiles[x].length))
+		{
+			for(int m = 0; m < -(x-tiles.length); m++)
+			{
+				if(tiles[x-m][y-m].getPlayer() != turn_int)
+				{
+					if(tiles[x-m+1][y-m+1].getPlayer() == turn_int)
+					{
+						for(int n = 0; n < -(x-tiles.length); n++)
+						{
+							if(tiles[x-n][y-n].getPlayer() != turn_int)
+							{
+								if(tiles[x-n][y-n].getPlayer() != BLANK)
+								{
+									tiles[x-n][y-n].setPlayer(turn_int);
+								}
+								else
+								{
+									return;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			for(int o = 0; o < -(y-tiles[x].length); o++)
+			{
+				if(tiles[x-o][y-o].getPlayer() != turn_int)
+				{
+					if(tiles[x-o+1][y-o+1].getPlayer() == turn_int)
+					{
+						for(int p = 0; p < -(y-tiles[x].length); p++)
+						{
+							if(tiles[x-p][y-p].getPlayer() != turn_int)
+							{
+								if(tiles[x-p][y-p].getPlayer() != BLANK)
+								{
+									tiles[x-p][y-p].setPlayer(turn_int);
+								}
+								else
+								{
+									return;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	public void check7(int x, int y) //7th check method. Checks diagonally from point A down and to the left.
+	{
+		/*
+		 * OOOOX	OOOOX	OOOOX
+		 * OOOOO	OOO/O	OOOXO
+		 * OOOOO	OO/OO	OOXOO
+		 * OOOOO	O/OOO	OXOOO
+		 * XOOOO    XOOOO	XOOOO
+		 */
+		if(-(x-tiles.length) > (tiles[x].length-y))
+		{
+			for(int q = 0; q < -(x-tiles.length); q++)
+			{
+				if(tiles[x-q][y+q].getPlayer() != turn_int)
+				{
+					if(tiles[x-q+1][y+q-1].getPlayer() == turn_int)
+					{
+						for(int r = 0; r < -(x-tiles[x].length); r++)
+						{
+							if(tiles[x-r][y+r].getPlayer() != turn_int)
+							{
+								if(tiles[x-r][y+r].getPlayer() != BLANK)
+								{
+									tiles[x-r][y+r].setPlayer(turn_int);
+								}
+								else
+								{
+									return;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			for(int s = 0; s < tiles[x].length-y; s++)
+			{
+				if(tiles[x-s][y+s].getPlayer() != turn_int)
+				{
+					if(tiles[x-s+1][y+s-1].getPlayer() == turn_int)
+					{
+						for(int t = 0; t < tiles[x].length-y; t++)
+						{
+							if(tiles[x-t][y+t].getPlayer() != turn_int)
+							{
+								if(tiles[x-t][y+t].getPlayer() != BLANK)
+								{
+									tiles[x-t][y+t].setPlayer(turn_int);
+								}
+								else
+								{
+									return;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	public void check8(int x, int y) //8th check method. Checks diagonally from point A up and to the right
+	{
+		/*
+		 * OOOOX	OOOOX	OOOOX
+		 * OOOOO	OOO/O	OOOXO
+		 * OOOOO	OO/OO	OOXOO
+		 * OOOOO	O/OOO	OXOOO
+		 * XOOOO    XOOOO	XOOOO
+		 */
+		if(tiles.length-x > -(y-tiles[x].length))
+		{
+			for(int u = 0; u < tiles.length-x; u++)
+			{
+				if(tiles[x+u][y-u].getPlayer() != turn_int)
+				{
+					if(tiles[x+u-1][y-u+1].getPlayer() == turn_int)
+					{
+						for(int v = x; v < tiles.length-x; v++)
+						{
+							if(tiles[x+u][y-u].getPlayer() != turn_int)
+							{
+								if(tiles[x+u][y-u].getPlayer() != BLANK)
+								{
+									tiles[x+u][y-u].setPlayer(turn_int);
+								}
+								else
+								{
+									return;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			for(int w = 0; w < -(y-tiles[x].length); w++)
+			{
+				if(tiles[x+w][y-w].getPlayer() != turn_int)
+				{
+					if(tiles[x+w-1][y-w+1].getPlayer() == turn_int)
+					{
+						for(int z = 0; z < -(y-tiles[x].length); z--)
+						{
+							if(tiles[x+z][y-z].getPlayer() != turn_int)
+							{
+								if(tiles[x+z][y-z].getPlayer() != BLANK)
+								{
+									tiles[x+z][y-z].setPlayer(turn_int);
+								}
+								else
+								{
+									return;
+								}
+							}
+						}
 					}
 				}
 			}
@@ -164,9 +489,8 @@ public class Othello implements ActionListener, MouseListener { //Added mouse li
 			}
 		}
 	}
-
 	@Override
-	public void mouseClicked(MouseEvent e) {//Autogenerated methods for mouselistener
+	public void mouseClicked(MouseEvent e) {
 		//This method does nothing, but Eclipse throws a fit
 		//If I don't have it
 		
@@ -180,14 +504,14 @@ public class Othello implements ActionListener, MouseListener { //Added mouse li
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {//These methods have no purpose, as clicking is handled by actionlistener
+	public void mouseReleased(MouseEvent e) {
 		//This method does nothing, but Eclipse throws a fit
 		//If I don't have it
 		
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) //If the player is hovering over the button
+	public void mouseEntered(MouseEvent e)
 	{
 		for(int x = 0; x < board.length; x++)
 		{
@@ -196,8 +520,8 @@ public class Othello implements ActionListener, MouseListener { //Added mouse li
 				if(e.getSource().equals(board[x][y]))
 				{
 					//Piece.drawPreview()
-				} //This currently unimplemented method will draw the transluscent piece and highlight what
-			}	//The move will do.
+				}
+			}
 		}
 	}
 
@@ -210,8 +534,8 @@ public class Othello implements ActionListener, MouseListener { //Added mouse li
 				if(e.getSource().equals(board[x][y]))
 				{
 					//Piece.cancelPreview()
-				}//This currently unimplemented method will cancel the preview drawn in the above mouse
-			}	//listener method.
+				}
+			}
 		}
 	}
 }
