@@ -2,23 +2,28 @@ import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Container;
-
+import java.awt.Image;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 
-public class Othello implements ActionListener, MouseListener {
+public class Othello implements ActionListener, MouseListener 
+{
 	//Standard Varaibles (ints, booleans, and strings)
 	final int P1 = 0;
 	final int P2 = 1;
 	final int BLANK = 2;
+	final Image NULL = null; //Because C++ is right, NULL is all caps. Java, get it together.
 	String p1_name = "Player 1";
 	String p2_name = "Player 2";
 	String p1_score = "2";
@@ -33,6 +38,11 @@ public class Othello implements ActionListener, MouseListener {
 	int turn_int;
 	boolean Green = true;
 	boolean p2_human = false;
+	static public ImageIcon blankpiece; //Creates all the global image icons for the buttons to morph into.
+	static public ImageIcon p1piece;
+	static public ImageIcon p2piece;
+	static public ImageIcon p1preview;
+	static public ImageIcon p2preview;
 	//Frame Related Variables
 	JFrame frame = new JFrame();
 	JTextField P1name = new JTextField(p1_name);
@@ -58,7 +68,54 @@ public class Othello implements ActionListener, MouseListener {
 	
 	JLabel Turn = new JLabel(turn);
 	
-	public Othello(){
+	public Othello()
+	{
+		//Image file reading and ImageIcon image setting!
+		Image blankimg = NULL; //BLANK IMaGe
+		try  //checking to make sure that file actually exists
+		{
+		blankimg = ImageIO.read(new File("Blank.png")); //Uses blank.png (our completely transluscent empty image)
+		} catch (IOException e) 
+		{
+			e.printStackTrace(); //Vomits errors on the user if they removed the image
+		}
+		blankpiece.setImage(blankimg); //Sets the blankpiece icon to the blankimg image.
+		Image p1img = NULL; ///Player 1's IMaGe
+		try 
+		{
+		p1img = ImageIO.read(new File("White_Piece.png")); //Uses the white piece image
+		} catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+		p1piece.setImage(p1img); //p1piece icon set to the image
+		Image p2img = NULL;  //And so on and so forth for all images
+		try 
+		{
+		p2img = ImageIO.read(new File("Black_Piece.png"));
+		} catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+		p2piece.setImage(p2img);
+		Image p1imgpre = NULL;
+		try 
+		{
+		p1imgpre = ImageIO.read(new File("White_Piece_Opaque.png"));
+		} catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+		p1preview.setImage(p1imgpre);
+		Image p2imgpre = NULL;
+		try 
+		{
+		p1img = ImageIO.read(new File("Black_Piece_Opaque.png"));
+		} catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+		p2preview.setImage(p2imgpre);
 		frame.setSize(1280, 720);
 		frame.setLayout(new BorderLayout());
 		center.setLayout(new GridLayout(8, 8));
@@ -91,7 +148,8 @@ public class Othello implements ActionListener, MouseListener {
 		reset();
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 		new Othello();
 
 	}
@@ -100,14 +158,17 @@ public class Othello implements ActionListener, MouseListener {
 		p2_score_int = 2;
 		turn_int = 0;
 		//Clear the board of all pieces
-		for (int x = 0; x < board.length; x++) {
+		for (int x = 0; x < board.length; x++) 
+		{
 			if(Green == false){
 				Green = true;
 			}
-			else{
+			else
+			{
 				Green = false;
 			}
-			for (int y = 0; y < board[0].length; y++) {
+			for (int y = 0; y < board[0].length; y++) 
+			{
 				if(Green == true){
 					board[x][y].setBackground(Color.GREEN);
 					Green = false;
@@ -509,11 +570,14 @@ public class Othello implements ActionListener, MouseListener {
 			}
 		}
 	}
-	public void actionPerformed(ActionEvent event) {
-		if(event.getSource().equals(restart)){
+	public void actionPerformed(ActionEvent event) 
+	{
+		if(event.getSource().equals(restart))
+		{
 			reset();
 		}
-		else if (event.getSource().equals(pass)){
+		else if (event.getSource().equals(pass))
+		{
 			if(turn_int == P1){
 				turn_int = P2;
 			}
@@ -521,17 +585,23 @@ public class Othello implements ActionListener, MouseListener {
 				turn_int = P1;
 			}
 		}
-		else{
-			for (int x = 0; x < board.length; x++) {
-				for (int y = 0; y < board[0].length; y++) {
-					if(event.getSource().equals(board[x][y])){
+		else
+		{
+			for (int x = 0; x < board.length; x++) 
+			{
+				for (int y = 0; y < board[0].length; y++) 
+				{
+					if(event.getSource().equals(board[x][y]))
+					{
 						//Check if a valid move
 						board[x][y].setText("TEST");
 						board[x][y].setEnabled(false);
-						if(turn_int == P1){
+						if(turn_int == P1)
+						{
 							turn_int = P2;
 						}
-						else{
+						else
+						{
 							turn_int = P1;
 						}
 					}
@@ -543,21 +613,24 @@ public class Othello implements ActionListener, MouseListener {
 		P2score.setText(P2name.getText() + ": " + p2_score);
 	}
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void mouseClicked(MouseEvent e) 
+	{
 		//This method does nothing, but Eclipse throws a fit
 		//If I don't have it
 		
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
+	public void mousePressed(MouseEvent e) 
+	{
 		//This method does nothing, but Eclipse throws a fit
 		//If I don't have it
 		
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
+	public void mouseReleased(MouseEvent e) 
+	{
 		//This method does nothing, but Eclipse throws a fit
 		//If I don't have it
 		
@@ -579,7 +652,8 @@ public class Othello implements ActionListener, MouseListener {
 	}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
+	public void mouseExited(MouseEvent e) 
+	{
 		for(int x = 0; x < board.length; x++)
 		{
 			for(int y = 0; y < board[0].length; y++)
