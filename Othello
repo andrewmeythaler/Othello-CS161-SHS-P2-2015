@@ -70,11 +70,48 @@ public class Othello implements ActionListener, MouseListener {
 	PieceIndicator P2indicator = new PieceIndicator();*/
 	JButton[][] board = new JButton[8][8];
 	Piece[][] tiles = new Piece[8][8];
-	
 	JLabel Turn = new JLabel(turn);
+	boolean valid = false;
+	int p1scoreTemp = 0;
+	int p2scoreTemp = 0;
 	
 	public Othello(){
 		//Image blankimg = NULL;
+		
+		//p2preview.setImage(p2imgpre);
+		frame.setSize(1280, 720);
+		frame.setLayout(new BorderLayout());
+		center.setLayout(new GridLayout(8, 8));
+		for (int x = 0; x < board.length; x++)
+		{
+			for (int y = 0; y < board[0].length; y++)
+			{
+				board[x][y] = new JButton();
+				tiles[x][y] = new Piece();
+				center.add(board[x][y]);
+				board[x][y].addActionListener(this);
+				board[x][y].addMouseListener(this);
+			}
+		}
+		frame.add(center, BorderLayout.CENTER);
+		west.setLayout(new GridLayout(6,1));
+		west.add(P1name);
+		west.add(P2name);
+		west.add(P1score);
+		P1score.setText(P1name.getText() + ": " + p1_score);
+		west.add(P2score);
+		P2score.setText(P2name.getText() + ": " + p2_score);
+		west.add(restart);
+		restart.addActionListener(this);
+		west.add(pass);
+		pass.addActionListener(this);
+		west.add(P2drop_in);
+		P2drop_in.addActionListener(this);
+		frame.add(west, BorderLayout.WEST);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+		//Set board color through hard reset
+		reset();
 		try 
 		{
 		Image blankimg = ImageIO.read(new File("Blank.bmp"));
@@ -124,37 +161,6 @@ public class Othello implements ActionListener, MouseListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//p2preview.setImage(p2imgpre);
-		frame.setSize(1280, 720);
-		frame.setLayout(new BorderLayout());
-		center.setLayout(new GridLayout(8, 8));
-		for (int x = 0; x < board.length; x++)
-		{
-			for (int y = 0; y < board[0].length; y++)
-			{
-				board[x][y] = new JButton();
-				center.add(board[x][y]);
-				board[x][y].addActionListener(this);
-				board[x][y].addMouseListener(this);
-			}
-		}
-		frame.add(center, BorderLayout.CENTER);
-		west.setLayout(new GridLayout(6,1));
-		west.add(P1name);
-		west.add(P2name);
-		west.add(P1score);
-		P1score.setText(P1name.getText() + ": " + p1_score);
-		west.add(P2score);
-		P2score.setText(P2name.getText() + ": " + p2_score);
-		west.add(restart);
-		restart.addActionListener(this);
-		west.add(pass);
-		pass.addActionListener(this);
-		frame.add(west, BorderLayout.WEST);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
-		//Set board color through hard reset
-		reset();
 	}
 	
 	public static void main(String[] args) 
@@ -179,16 +185,24 @@ public class Othello implements ActionListener, MouseListener {
 			for (int y = 0; y < board[0].length; y++) {
 				if(Green == true){
 					board[x][y].setBackground(Color.GREEN);
+					tiles[x][y].setPlayer(BLANK);
 					Green = false;
 				}
 				else{
 					board[x][y].setBackground(Color.WHITE);
 					Green = true;
 				}
-				board[x][y].setText(" ");
 				board[x][y].setEnabled(true);
 			}
 		}
+		board[3][3].setIcon(p1piece);
+		board[3][4].setIcon(p2piece);
+		board[4][3].setIcon(p2piece);
+		board[4][4].setIcon(p1piece);
+		tiles[3][3].setPlayer(P1);
+		tiles[3][4].setPlayer(P2);
+		tiles[4][3].setPlayer(P2);
+		tiles[4][4].setPlayer(P1);
 	}
 	public void textSet()
 	{
@@ -197,6 +211,30 @@ public class Othello implements ActionListener, MouseListener {
 		p1_pieces = Integer.toString(p1_pieces_int);
 		p2_pieces = Integer.toString(p2_pieces_int);
 		turn = Integer.toString(turn_int);
+	}
+	public int CountScores(int Player){
+		p1scoreTemp = 0;
+		p2scoreTemp = 0;
+		for (int x = 0; x < board.length; x++) {
+			for (int y = 0; y < board[0].length; y++) {
+				if(Player == P1){
+					if(board[x][y].getIcon() == p1piece){
+						p1scoreTemp++;
+					}
+				}
+				else if(Player == P2){
+					if(board[x][y].getIcon() == p2piece){
+						p2scoreTemp++;
+					}
+				}
+			}
+		}
+		if(Player == P1){
+			return p1scoreTemp;
+		}
+		else{
+			return p2scoreTemp;
+		}
 	}
 	public void check1(int x, int y) //Default check method. Checks from point A to the left.
 	{
@@ -220,6 +258,18 @@ public class Othello implements ActionListener, MouseListener {
 							if(tiles[e][y].getPlayer() != BLANK)
 							{
 								tiles[e][y].setPlayer(turn_int);
+								valid = true;
+								tiles[x][y].setPlayer(turn_int);
+								if(turn_int == P1)
+								{
+									board[x][y].setIcon(p1piece);
+									board[e][y].setIcon(p1piece);
+								}
+								else if(turn_int == P2)
+								{
+									board[x][y].setIcon(p2piece);
+									board[e][y].setIcon(p2piece);
+								}
 							}
 							else
 							{
@@ -253,6 +303,18 @@ public class Othello implements ActionListener, MouseListener {
 							if(tiles[f][y].getPlayer() != BLANK)
 							{
 								tiles[f][y].setPlayer(turn_int);
+								valid = true;
+								tiles[x][y].setPlayer(turn_int);
+								if(turn_int == P1)
+								{
+									board[x][y].setIcon(p1piece);
+									board[f][y].setIcon(p1piece);
+								}
+								else if(turn_int == P2)
+								{
+									board[x][y].setIcon(p2piece);
+									board[f][y].setIcon(p2piece);
+								}
 							}
 							else
 							{
@@ -286,6 +348,18 @@ public class Othello implements ActionListener, MouseListener {
 							if(tiles[g][y].getPlayer() != BLANK)
 							{
 								tiles[g][y].setPlayer(turn_int);
+								valid = true;
+								tiles[x][y].setPlayer(turn_int);
+								if(turn_int == P1)
+								{
+									board[x][y].setIcon(p1piece);
+									board[g][y].setIcon(p1piece);
+								}
+								else if(turn_int == P2)
+								{
+									board[x][y].setIcon(p2piece);
+									board[g][y].setIcon(p2piece);
+								}
 							}
 							else
 							{
@@ -319,6 +393,18 @@ public class Othello implements ActionListener, MouseListener {
 							if(tiles[h][y].getPlayer() != BLANK)
 							{
 								tiles[h][y].setPlayer(turn_int);
+								valid = true;
+								tiles[x][y].setPlayer(turn_int);
+								if(turn_int == P1)
+								{
+									board[x][y].setIcon(p1piece);
+									board[h][y].setIcon(p1piece);
+								}
+								else if(turn_int == P2)
+								{
+									board[x][y].setIcon(p2piece);
+									board[h][y].setIcon(p2piece);
+								}
 							}
 							else
 							{
@@ -354,6 +440,18 @@ public class Othello implements ActionListener, MouseListener {
 								if(tiles[x+j][y+j].getPlayer() != BLANK)
 								{
 									tiles[x+j][y+j].setPlayer(turn_int);
+									valid = true;
+									tiles[x][y].setPlayer(turn_int);
+									if(turn_int == P1)
+									{
+										board[x][y].setIcon(p1piece);
+										board[x+j][y+j].setIcon(p1piece);
+									}
+									else if(turn_int == P2)
+									{
+										board[x][y].setIcon(p2piece);
+										board[x+j][y+j].setIcon(p2piece);
+									}
 								}
 								else
 								{
@@ -380,6 +478,18 @@ public class Othello implements ActionListener, MouseListener {
 								if(tiles[x+l][y+l].getPlayer() != BLANK)
 								{
 									tiles[x+l][y+l].setPlayer(turn_int);
+									valid = true;
+									tiles[x][y].setPlayer(turn_int);
+									if(turn_int == P1)
+									{
+										board[x][y].setIcon(p1piece);
+										board[x+l][y+l].setIcon(p1piece);
+									}
+									else if(turn_int == P2)
+									{
+										board[x][y].setIcon(p2piece);
+										board[x+l][y+l].setIcon(p2piece);
+									}
 								}
 								else
 								{
@@ -416,6 +526,18 @@ public class Othello implements ActionListener, MouseListener {
 								if(tiles[x-n][y-n].getPlayer() != BLANK)
 								{
 									tiles[x-n][y-n].setPlayer(turn_int);
+									valid = true;
+									tiles[x][y].setPlayer(turn_int);
+									if(turn_int == P1)
+									{
+										board[x][y].setIcon(p1piece);
+										board[x-n][y-n].setIcon(p1piece);
+									}
+									else if(turn_int == P2)
+									{
+										board[x][y].setIcon(p2piece);
+										board[x-n][y-n].setIcon(p2piece);
+									}
 								}
 								else
 								{
@@ -442,6 +564,18 @@ public class Othello implements ActionListener, MouseListener {
 								if(tiles[x-p][y-p].getPlayer() != BLANK)
 								{
 									tiles[x-p][y-p].setPlayer(turn_int);
+									valid = true;
+									tiles[x][y].setPlayer(turn_int);
+									if(turn_int == P1)
+									{
+										board[x][y].setIcon(p1piece);
+										board[x-p][y-p].setIcon(p1piece);
+									}
+									else if(turn_int == P2)
+									{
+										board[x][y].setIcon(p2piece);
+										board[x-p][y-p].setIcon(p2piece);
+									}
 								}
 								else
 								{
@@ -478,6 +612,18 @@ public class Othello implements ActionListener, MouseListener {
 								if(tiles[x-r][y+r].getPlayer() != BLANK)
 								{
 									tiles[x-r][y+r].setPlayer(turn_int);
+									valid = true;
+									tiles[x][y].setPlayer(turn_int);
+									if(turn_int == P1)
+									{
+										board[x][y].setIcon(p1piece);
+										board[x-r][y+r].setIcon(p1piece);
+									}
+									else if(turn_int == P2)
+									{
+										board[x][y].setIcon(p2piece);
+										board[x-r][y+r].setIcon(p2piece);
+									}
 								}
 								else
 								{
@@ -504,6 +650,17 @@ public class Othello implements ActionListener, MouseListener {
 								if(tiles[x-t][y+t].getPlayer() != BLANK)
 								{
 									tiles[x-t][y+t].setPlayer(turn_int);
+									valid = true;tiles[x][y].setPlayer(turn_int);
+									if(turn_int == P1)
+									{
+										board[x][y].setIcon(p1piece);
+										board[x-t][y+t].setIcon(p1piece);
+									}
+									else if(turn_int == P2)
+									{
+										board[x][y].setIcon(p2piece);
+										board[x-t][y+t].setIcon(p2piece);
+									}
 								}
 								else
 								{
@@ -535,11 +692,23 @@ public class Othello implements ActionListener, MouseListener {
 					{
 						for(int v = x; v < tiles.length-x; v++)
 						{
-							if(tiles[x+u][y-u].getPlayer() != turn_int)
+							if(tiles[x+v][y-v].getPlayer() != turn_int)
 							{
-								if(tiles[x+u][y-u].getPlayer() != BLANK)
+								if(tiles[x+v][y-v].getPlayer() != BLANK)
 								{
-									tiles[x+u][y-u].setPlayer(turn_int);
+									tiles[x+v][y-v].setPlayer(turn_int);
+									valid = true;
+									tiles[x][y].setPlayer(turn_int);
+									if(turn_int == P1)
+									{
+										board[x][y].setIcon(p1piece);
+										board[x+v][y-v].setIcon(p1piece);
+									}
+									else if(turn_int == P2)
+									{
+										board[x][y].setIcon(p2piece);
+										board[x+v][y-v].setIcon(p2piece);
+									}
 								}
 								else
 								{
@@ -566,6 +735,18 @@ public class Othello implements ActionListener, MouseListener {
 								if(tiles[x+z][y-z].getPlayer() != BLANK)
 								{
 									tiles[x+z][y-z].setPlayer(turn_int);
+									valid = true;
+									tiles[x][y].setPlayer(turn_int);
+									if(turn_int == P1)
+									{
+										board[x][y].setIcon(p1piece);
+										board[x+z][y-z].setIcon(p1piece);
+									}
+									else if(turn_int == P2)
+									{
+										board[x][y].setIcon(p2piece);
+										board[x+z][y-z].setIcon(p2piece);
+									}
 								}
 								else
 								{
@@ -590,29 +771,82 @@ public class Othello implements ActionListener, MouseListener {
 				turn_int = P1;
 			}
 		}
+		else if(event.getSource().equals(P2drop_in))
+		{
+			if(p2_human == false)
+			{
+				p2_human = true;
+			}
+			else
+			{
+				p2_human = false;
+			}
+		}
 		else{
 			for (int x = 0; x < board.length; x++) {
 				for (int y = 0; y < board[0].length; y++) {
 					if(event.getSource().equals(board[x][y])){
 						//Check if a valid move
-						//board[x][y].setText("TEST");
-						board[x][y].setEnabled(false);
-						if(turn_int == P1){
-							turn_int = P2;
-						//	Image p1piecers = p1piece.getScaledInstance(board[x][y].getSize().getWidth(), , SCALE_SMOOTH)
-							board[x][y].setIcon(p1piecers);
+						if(board[x][y].getIcon() == p1piece){
+							//Invalid Move
+						}
+						else if(board[x][y].getIcon() == p2piece){
+							//Invalid Move
 						}
 						else{
-							turn_int = P1;
-							board[x][y].setIcon(p2piece);
+							check1(x,y);
+							check2(x,y);
+							check3(x,y);
+							check4(x,y);
+							check5(x,y);
+							check6(x,y);
+							check7(x,y);
+							check8(x,y);
+							if(valid == true){
+							if(turn_int == P1){
+								turn_int = P2;
+							}
+							else{
+								turn_int = P1;
+							}
+							valid = false;
+							}
+							else{
+								//Invalid Move
+							}
 						}
 					}
 				}
 			}
 		}
+		p1_score_int = CountScores(P1);
+		p2_score_int = CountScores(P2);
+		textSet();
 		//Update the points and names
 		P1score.setText(P1name.getText() + ": " + p1_score);
 		P2score.setText(P2name.getText() + ": " + p2_score);
+		if(p2_human == false)
+		{
+			for(int x = 0; x < board.length; x++)
+			{
+				for(int y = 0; y < board[0].length; y++)
+				{
+					check1(x,y);
+					check2(x,y);
+					check3(x,y);
+					check4(x,y);
+					check5(x,y);
+					check6(x,y);
+					check7(x,y);
+					check8(x,y);
+					if(valid == true)
+					{
+						turn_int = P1;
+						break;
+					}
+				}
+			}
+		}
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -664,3 +898,4 @@ public class Othello implements ActionListener, MouseListener {
 		}
 	}
 }
+
