@@ -79,6 +79,7 @@ public class Othello implements ActionListener, MouseListener {
 		{
 		Image blankimg = ImageIO.read(new File("Blank.bmp"));
 		System.out.println(blankimg);
+		//Image blankimgrs = blankimg.getScaledInstance(((int)(board[0][0].getSize().getWidth())), ((int)(board[0][0].getSize().getHeight())), Image.SCALE_SMOOTH);
 		blankpiece = new ImageIcon(blankimg);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -88,7 +89,8 @@ public class Othello implements ActionListener, MouseListener {
 		try 
 		{
 		Image p1img = ImageIO.read(new File("White_Piece.png"));
-		p1piece = new ImageIcon(p1img);
+		Image p1imgrs = p1img.getScaledInstance(((int)(board[0][0].getSize().getWidth())), ((int)(board[0][0].getSize().getHeight())), Image.SCALE_SMOOTH);
+		p1piece = new ImageIcon(p1imgrs);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -97,7 +99,8 @@ public class Othello implements ActionListener, MouseListener {
 		try 
 		{
 		Image p2img = ImageIO.read(new File("Black_Piece.png"));
-		p2piece = new ImageIcon(p2img);
+		Image p2imgrs = p2img.getScaledInstance(((int)(board[0][0].getSize().getWidth())), ((int)(board[0][0].getSize().getHeight())), Image.SCALE_SMOOTH);
+		p2piece = new ImageIcon(p2imgrs);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -106,7 +109,8 @@ public class Othello implements ActionListener, MouseListener {
 		try 
 		{
 		Image p1imgpre = ImageIO.read(new File("White_Piece_Opaque.png"));
-		p1preview = new ImageIcon(p1imgpre);
+		Image p1imgprers = p1imgpre.getScaledInstance(((int)(board[0][0].getSize().getWidth())), ((int)(board[0][0].getSize().getHeight())), Image.SCALE_SMOOTH);
+		p1preview = new ImageIcon(p1imgprers);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -115,7 +119,8 @@ public class Othello implements ActionListener, MouseListener {
 		try 
 		{
 		Image p2imgpre = ImageIO.read(new File("Black_Piece_Opaque.png"));
-		p2preview = new ImageIcon(p2imgpre);
+		Image p2imgprers = p2imgpre.getScaledInstance(((int)(board[0][0].getSize().getWidth())), ((int)(board[0][0].getSize().getHeight())), Image.SCALE_SMOOTH);
+		p2preview = new ImageIcon(p2imgprers);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
