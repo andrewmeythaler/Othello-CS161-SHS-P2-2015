@@ -6,7 +6,6 @@ import java.awt.Container;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
+import java.util.Vector;
 
 public class Othello implements ActionListener, MouseListener {
 	//Standard Varaibles (ints, booleans, and strings)
@@ -74,6 +74,7 @@ public class Othello implements ActionListener, MouseListener {
 	boolean valid = false;
 	int p1scoreTemp = 0;
 	int p2scoreTemp = 0;
+	Vector<Piece> row = new Vector<Piece>();
 	
 	public Othello(){
 		//Image blankimg = NULL;
@@ -215,17 +216,15 @@ public class Othello implements ActionListener, MouseListener {
 	public int CountScores(int Player){
 		p1scoreTemp = 0;
 		p2scoreTemp = 0;
-		for (int x = 0; x < board.length; x++) {
-			for (int y = 0; y < board[0].length; y++) {
-				if(Player == P1){
-					if(board[x][y].getIcon() == p1piece){
-						p1scoreTemp++;
-					}
+		for (int x = 0; x < tiles.length; x++) {
+			for (int y = 0; y < tiles[x].length; y++) {
+				if(tiles[x][y].getPlayer() == P1){
+					board[x][y].setIcon(p1piece);
+					p1scoreTemp++;
 				}
-				else if(Player == P2){
-					if(board[x][y].getIcon() == p2piece){
-						p2scoreTemp++;
-					}
+				else if(tiles[x][y].getPlayer() == P2){
+					board[x][y].setIcon(p2piece);
+					p2scoreTemp++;
 				}
 			}
 		}
@@ -245,39 +244,23 @@ public class Othello implements ActionListener, MouseListener {
 		 * OXOOX	OX->X	OXXXX
 		 * OOOOO    OOOOO	OOOOO
 		 */
+		row.clear();
 		for(int a = x; a < tiles.length; a++)
 		{
-			if(tiles[a][y].getPlayer() != turn_int)
+			if(tiles[a][y].getPlayer() != BLANK)
 			{
-				if(tiles[a-1][y].getPlayer() == turn_int)
-				{
-					for(int e = x; e < tiles.length; e++)
-					{
-						if(tiles[e][y].getPlayer() != turn_int)
-						{
-							if(tiles[e][y].getPlayer() != BLANK)
-							{
-								tiles[e][y].setPlayer(turn_int);
-								valid = true;
-								tiles[x][y].setPlayer(turn_int);
-								if(turn_int == P1)
-								{
-									board[x][y].setIcon(p1piece);
-									board[e][y].setIcon(p1piece);
-								}
-								else if(turn_int == P2)
-								{
-									board[x][y].setIcon(p2piece);
-									board[e][y].setIcon(p2piece);
-								}
-							}
-							else
-							{
-								return;
-							}
-						}
-					}
-				}
+				row.addElement(tiles[a][y]);
+			}
+			else
+			{
+				break;
+			}
+		}
+		if(row.size() != 0 && row.firstElement().getPlayer() == row.lastElement().getPlayer())
+		{
+			for(int a = 0; a < row.size(); a++)
+			{
+				row.elementAt(a).setPlayer(turn_int);
 			}
 		}
 	}
@@ -290,39 +273,23 @@ public class Othello implements ActionListener, MouseListener {
 		 * OXOOX	OX<-X	OX<-X
 		 * OOOOO    OOOOO	OOOOO
 		 */
-		for(int b = x; b > -1; b--)
+		row.clear();
+		for(int a = x; a > -1; a--)
 		{
-			if(tiles[b][y].getPlayer() != turn_int)
+			if(tiles[a][y].getPlayer() != BLANK)
 			{
-				if(tiles[b+1][y].getPlayer() == turn_int)
-				{
-					for(int f = x; f > tiles.length; f--)
-					{
-						if(tiles[f][y].getPlayer() != turn_int)
-						{
-							if(tiles[f][y].getPlayer() != BLANK)
-							{
-								tiles[f][y].setPlayer(turn_int);
-								valid = true;
-								tiles[x][y].setPlayer(turn_int);
-								if(turn_int == P1)
-								{
-									board[x][y].setIcon(p1piece);
-									board[f][y].setIcon(p1piece);
-								}
-								else if(turn_int == P2)
-								{
-									board[x][y].setIcon(p2piece);
-									board[f][y].setIcon(p2piece);
-								}
-							}
-							else
-							{
-								return;
-							}
-						}
-					}
-				}
+				row.addElement(tiles[a][y]);
+			}
+			else
+			{
+				break;
+			}
+		}
+		if(row.size() != 0 && row.firstElement().getPlayer() == row.lastElement().getPlayer())
+		{
+			for(int a = 0; a < row.size(); a++)
+			{
+				row.elementAt(a).setPlayer(turn_int);
 			}
 		}
 	}
@@ -335,39 +302,23 @@ public class Othello implements ActionListener, MouseListener {
 		 * OXOOO	OXOOO	OXOOO
 		 * OOOOO    OOOOO	OOOOO
 		 */
-		for(int c = y; c < tiles[x].length; c++)
+		row.clear();
+		for(int a = y; a < tiles[x].length; a++)
 		{
-			if(tiles[c][y].getPlayer() != turn_int)
+			if(tiles[x][a].getPlayer() != BLANK)
 			{
-				if(tiles[c-1][y].getPlayer() == turn_int)
-				{
-					for(int g = y; g < tiles[x].length; g++)
-					{
-						if(tiles[g][y].getPlayer() != turn_int)
-						{
-							if(tiles[g][y].getPlayer() != BLANK)
-							{
-								tiles[g][y].setPlayer(turn_int);
-								valid = true;
-								tiles[x][y].setPlayer(turn_int);
-								if(turn_int == P1)
-								{
-									board[x][y].setIcon(p1piece);
-									board[g][y].setIcon(p1piece);
-								}
-								else if(turn_int == P2)
-								{
-									board[x][y].setIcon(p2piece);
-									board[g][y].setIcon(p2piece);
-								}
-							}
-							else
-							{
-								return;
-							}
-						}
-					}
-				}
+				row.addElement(tiles[x][a]);
+			}
+			else
+			{
+				break;
+			}
+		}
+		if(row.size() != 0 && row.firstElement().getPlayer() == row.lastElement().getPlayer())
+		{
+			for(int a = 0; a < row.size(); a++)
+			{
+				row.elementAt(a).setPlayer(turn_int);
 			}
 		}
 	}
@@ -380,39 +331,23 @@ public class Othello implements ActionListener, MouseListener {
 		 * OXOOO	OXOOO	OXOOO
 		 * OOOOO    OOOOO	OOOOO
 		 */
-		for(int d = y; d > -1; d--)
+		row.clear();
+		for(int a = y; a > -1; a--)
 		{
-			if(tiles[d][y].getPlayer() != turn_int)
+			if(tiles[x][a].getPlayer() != BLANK)
 			{
-				if(tiles[d+1][y].getPlayer() == turn_int)
-				{
-					for(int h = y; h > tiles[x].length; h--)
-					{
-						if(tiles[h][y].getPlayer() != turn_int)
-						{
-							if(tiles[h][y].getPlayer() != BLANK)
-							{
-								tiles[h][y].setPlayer(turn_int);
-								valid = true;
-								tiles[x][y].setPlayer(turn_int);
-								if(turn_int == P1)
-								{
-									board[x][y].setIcon(p1piece);
-									board[h][y].setIcon(p1piece);
-								}
-								else if(turn_int == P2)
-								{
-									board[x][y].setIcon(p2piece);
-									board[h][y].setIcon(p2piece);
-								}
-							}
-							else
-							{
-								return;
-							}
-						}
-					}
-				}
+				row.addElement(tiles[x][a]);
+			}
+			else
+			{
+				break;
+			}
+		}
+		if(row.size() != 0 && row.firstElement().getPlayer() == row.lastElement().getPlayer())
+		{
+			for(int a = 0; a < row.size(); a++)
+			{
+				row.elementAt(a).setPlayer(turn_int);
 			}
 		}
 	}
@@ -425,79 +360,47 @@ public class Othello implements ActionListener, MouseListener {
 		 * OOOOO	OOO\O	OOOXO
 		 * OOOOX    OOOOX	OOOOX
 		 */
-		if(tiles.length-0 > tiles[x].length-y)
+		if(x > y)
 		{
-			for(int i = 0; i < tiles.length-x; i++)
+			row.clear();
+			for(int a = 0; a < tiles.length-x; a++)
 			{
-				if(tiles[x+i][y+i].getPlayer() != turn_int)
+				if(tiles[x+a][y+a].getPlayer() != BLANK)
 				{
-					if(tiles[x+i-1][y+i-1].getPlayer() == turn_int)
-					{
-						for(int j = 0; j < tiles.length-x; j++)
-						{
-							if(tiles[x+j][y+j].getPlayer() != turn_int)
-							{
-								if(tiles[x+j][y+j].getPlayer() != BLANK)
-								{
-									tiles[x+j][y+j].setPlayer(turn_int);
-									valid = true;
-									tiles[x][y].setPlayer(turn_int);
-									if(turn_int == P1)
-									{
-										board[x][y].setIcon(p1piece);
-										board[x+j][y+j].setIcon(p1piece);
-									}
-									else if(turn_int == P2)
-									{
-										board[x][y].setIcon(p2piece);
-										board[x+j][y+j].setIcon(p2piece);
-									}
-								}
-								else
-								{
-									return;
-								}
-							}
-						}
-					}
+					row.addElement(tiles[x+a][y+a]);
+				}
+				else
+				{
+					break;
+				}
+			}
+			if(row.size() != 0 && row.firstElement().getPlayer() == row.lastElement().getPlayer())
+			{
+				for(int a = 0; a < row.size(); a++)
+				{
+					row.elementAt(a).setPlayer(turn_int);
 				}
 			}
 		}
 		else
 		{
-			for(int k = 0; k < tiles[x].length-y; k++)
+			row.clear();
+			for(int a = 0; a < tiles[x].length-y; a++)
 			{
-				if(tiles[x+k][y+k].getPlayer() != turn_int)
+				if(tiles[x+a][y+a].getPlayer() != BLANK)
 				{
-					if(tiles[x+k-1][y+k-1].getPlayer() == turn_int)
-					{
-						for(int l = 0; l < tiles[x].length; l++)
-						{
-							if(tiles[x+l][y+l].getPlayer() != turn_int)
-							{
-								if(tiles[x+l][y+l].getPlayer() != BLANK)
-								{
-									tiles[x+l][y+l].setPlayer(turn_int);
-									valid = true;
-									tiles[x][y].setPlayer(turn_int);
-									if(turn_int == P1)
-									{
-										board[x][y].setIcon(p1piece);
-										board[x+l][y+l].setIcon(p1piece);
-									}
-									else if(turn_int == P2)
-									{
-										board[x][y].setIcon(p2piece);
-										board[x+l][y+l].setIcon(p2piece);
-									}
-								}
-								else
-								{
-									return;
-								}
-							}
-						}
-					}
+					row.addElement(tiles[x+a][y+a]);
+				}
+				else
+				{
+					break;
+				}
+			}
+			if(row.size() != 0 && row.firstElement().getPlayer() == row.lastElement().getPlayer())
+			{
+				for(int a = 0; a < row.size(); a++)
+				{
+					row.elementAt(a).setPlayer(turn_int);
 				}
 			}
 		}
@@ -511,79 +414,47 @@ public class Othello implements ActionListener, MouseListener {
 		 * OOOOO	OOO\O	OOOXO
 		 * OOOOX    OOOOX	OOOOX
 		 */
-		if(-(x-tiles.length) > -(y-tiles[x].length))
+		if(y > x)
 		{
-			for(int m = 0; m < -(x-tiles.length); m++)
+			row.clear();
+			for(int a = 0; a < x; a++)
 			{
-				if(tiles[x-m][y-m].getPlayer() != turn_int)
+				if(tiles[x-a][y-a].getPlayer() != BLANK)
 				{
-					if(tiles[x-m+1][y-m+1].getPlayer() == turn_int)
-					{
-						for(int n = 0; n < -(x-tiles.length); n++)
-						{
-							if(tiles[x-n][y-n].getPlayer() != turn_int)
-							{
-								if(tiles[x-n][y-n].getPlayer() != BLANK)
-								{
-									tiles[x-n][y-n].setPlayer(turn_int);
-									valid = true;
-									tiles[x][y].setPlayer(turn_int);
-									if(turn_int == P1)
-									{
-										board[x][y].setIcon(p1piece);
-										board[x-n][y-n].setIcon(p1piece);
-									}
-									else if(turn_int == P2)
-									{
-										board[x][y].setIcon(p2piece);
-										board[x-n][y-n].setIcon(p2piece);
-									}
-								}
-								else
-								{
-									return;
-								}
-							}
-						}
-					}
+					row.addElement(tiles[x-a][y-a]);
+				}
+				else
+				{
+					break;
+				}
+			}
+			if(row.size() != 0 && row.firstElement().getPlayer() == row.lastElement().getPlayer())
+			{
+				for(int a = 0; a < row.size(); a++)
+				{
+					row.elementAt(a).setPlayer(turn_int);
 				}
 			}
 		}
 		else
 		{
-			for(int o = 0; o < -(y-tiles[x].length); o++)
+			row.clear();
+			for(int a = 0; a < y; a++)
 			{
-				if(tiles[x-o][y-o].getPlayer() != turn_int)
+				if(tiles[x-a][y-a].getPlayer() != BLANK)
 				{
-					if(tiles[x-o+1][y-o+1].getPlayer() == turn_int)
-					{
-						for(int p = 0; p < -(y-tiles[x].length); p++)
-						{
-							if(tiles[x-p][y-p].getPlayer() != turn_int)
-							{
-								if(tiles[x-p][y-p].getPlayer() != BLANK)
-								{
-									tiles[x-p][y-p].setPlayer(turn_int);
-									valid = true;
-									tiles[x][y].setPlayer(turn_int);
-									if(turn_int == P1)
-									{
-										board[x][y].setIcon(p1piece);
-										board[x-p][y-p].setIcon(p1piece);
-									}
-									else if(turn_int == P2)
-									{
-										board[x][y].setIcon(p2piece);
-										board[x-p][y-p].setIcon(p2piece);
-									}
-								}
-								else
-								{
-									return;
-								}
-							}
-						}
-					}
+					row.addElement(tiles[x-a][y-a]);
+				}
+				else
+				{
+					break;
+				}
+			}
+			if(row.size() != 0 && row.firstElement().getPlayer() == row.lastElement().getPlayer())
+			{
+				for(int a = 0; a < row.size(); a++)
+				{
+					row.elementAt(a).setPlayer(turn_int);
 				}
 			}
 		}
@@ -597,78 +468,47 @@ public class Othello implements ActionListener, MouseListener {
 		 * OOOOO	O/OOO	OXOOO
 		 * XOOOO    XOOOO	XOOOO
 		 */
-		if(-(x-tiles.length) > (tiles[x].length-y))
+		if(x < 8-y)
 		{
-			for(int q = 0; q < -(x-tiles.length); q++)
+			row.clear();
+			for(int a = 0; a < x; a++)
 			{
-				if(tiles[x-q][y+q].getPlayer() != turn_int)
+				if(tiles[x-a][y+a].getPlayer() != BLANK)
 				{
-					if(tiles[x-q+1][y+q-1].getPlayer() == turn_int)
-					{
-						for(int r = 0; r < -(x-tiles[x].length); r++)
-						{
-							if(tiles[x-r][y+r].getPlayer() != turn_int)
-							{
-								if(tiles[x-r][y+r].getPlayer() != BLANK)
-								{
-									tiles[x-r][y+r].setPlayer(turn_int);
-									valid = true;
-									tiles[x][y].setPlayer(turn_int);
-									if(turn_int == P1)
-									{
-										board[x][y].setIcon(p1piece);
-										board[x-r][y+r].setIcon(p1piece);
-									}
-									else if(turn_int == P2)
-									{
-										board[x][y].setIcon(p2piece);
-										board[x-r][y+r].setIcon(p2piece);
-									}
-								}
-								else
-								{
-									return;
-								}
-							}
-						}
-					}
+					row.addElement(tiles[x-a][y+a]);
+				}
+				else
+				{
+					break;
+				}
+			}
+			if(row.size() != 0 && row.firstElement().getPlayer() == row.lastElement().getPlayer())
+			{
+				for(int a = 0; a < row.size(); a++)
+				{
+					row.elementAt(a).setPlayer(turn_int);
 				}
 			}
 		}
 		else
 		{
-			for(int s = 0; s < tiles[x].length-y; s++)
+			row.clear();
+			for(int a = 0; a < 8-y; a++)
 			{
-				if(tiles[x-s][y+s].getPlayer() != turn_int)
+				if(tiles[x-a][y+a].getPlayer() != BLANK)
 				{
-					if(tiles[x-s+1][y+s-1].getPlayer() == turn_int)
-					{
-						for(int t = 0; t < tiles[x].length-y; t++)
-						{
-							if(tiles[x-t][y+t].getPlayer() != turn_int)
-							{
-								if(tiles[x-t][y+t].getPlayer() != BLANK)
-								{
-									tiles[x-t][y+t].setPlayer(turn_int);
-									valid = true;tiles[x][y].setPlayer(turn_int);
-									if(turn_int == P1)
-									{
-										board[x][y].setIcon(p1piece);
-										board[x-t][y+t].setIcon(p1piece);
-									}
-									else if(turn_int == P2)
-									{
-										board[x][y].setIcon(p2piece);
-										board[x-t][y+t].setIcon(p2piece);
-									}
-								}
-								else
-								{
-									return;
-								}
-							}
-						}
-					}
+					row.addElement(tiles[x-a][y+a]);
+				}
+				else
+				{
+					break;
+				}
+			}
+			if(row.size() != 0 && row.firstElement().getPlayer() == row.lastElement().getPlayer())
+			{
+				for(int a = 0; a < row.size(); a++)
+				{
+					row.elementAt(a).setPlayer(turn_int);
 				}
 			}
 		}
@@ -682,79 +522,47 @@ public class Othello implements ActionListener, MouseListener {
 		 * OOOOO	O/OOO	OXOOO
 		 * XOOOO    XOOOO	XOOOO
 		 */
-		if(tiles.length-x > -(y-tiles[x].length))
+		if(x > y)
 		{
-			for(int u = 0; u < tiles.length-x; u++)
+			row.clear();
+			for(int a = 0; a < 8-x; a++)
 			{
-				if(tiles[x+u][y-u].getPlayer() != turn_int)
+				if(tiles[x+a][y+a].getPlayer() != BLANK)
 				{
-					if(tiles[x+u-1][y-u+1].getPlayer() == turn_int)
-					{
-						for(int v = x; v < tiles.length-x; v++)
-						{
-							if(tiles[x+v][y-v].getPlayer() != turn_int)
-							{
-								if(tiles[x+v][y-v].getPlayer() != BLANK)
-								{
-									tiles[x+v][y-v].setPlayer(turn_int);
-									valid = true;
-									tiles[x][y].setPlayer(turn_int);
-									if(turn_int == P1)
-									{
-										board[x][y].setIcon(p1piece);
-										board[x+v][y-v].setIcon(p1piece);
-									}
-									else if(turn_int == P2)
-									{
-										board[x][y].setIcon(p2piece);
-										board[x+v][y-v].setIcon(p2piece);
-									}
-								}
-								else
-								{
-									return;
-								}
-							}
-						}
-					}
+					row.addElement(tiles[x+a][y+a]);
+				}
+				else
+				{
+					break;
+				}
+			}
+			if(row.size() != 0 && row.firstElement().getPlayer() == row.lastElement().getPlayer())
+			{
+				for(int a = 0; a < row.size(); a++)
+				{
+					row.elementAt(a).setPlayer(turn_int);
 				}
 			}
 		}
 		else
 		{
-			for(int w = 0; w < -(y-tiles[x].length); w++)
+			row.clear();
+			for(int a = 0; a < 8-y; a++)
 			{
-				if(tiles[x+w][y-w].getPlayer() != turn_int)
+				if(tiles[x+a][y+a].getPlayer() != BLANK)
 				{
-					if(tiles[x+w-1][y-w+1].getPlayer() == turn_int)
-					{
-						for(int z = 0; z < -(y-tiles[x].length); z--)
-						{
-							if(tiles[x+z][y-z].getPlayer() != turn_int)
-							{
-								if(tiles[x+z][y-z].getPlayer() != BLANK)
-								{
-									tiles[x+z][y-z].setPlayer(turn_int);
-									valid = true;
-									tiles[x][y].setPlayer(turn_int);
-									if(turn_int == P1)
-									{
-										board[x][y].setIcon(p1piece);
-										board[x+z][y-z].setIcon(p1piece);
-									}
-									else if(turn_int == P2)
-									{
-										board[x][y].setIcon(p2piece);
-										board[x+z][y-z].setIcon(p2piece);
-									}
-								}
-								else
-								{
-									return;
-								}
-							}
-						}
-					}
+					row.addElement(tiles[x+a][y+a]);
+				}
+				else
+				{
+					break;
+				}
+			}
+			if(row.size() != 0 && row.firstElement().getPlayer() == row.lastElement().getPlayer())
+			{
+				for(int a = 0; a < row.size(); a++)
+				{
+					row.elementAt(a).setPlayer(turn_int);
 				}
 			}
 		}
@@ -794,6 +602,7 @@ public class Othello implements ActionListener, MouseListener {
 							//Invalid Move
 						}
 						else{
+							tiles[x][y].setPlayer(turn_int);
 							check1(x,y);
 							check2(x,y);
 							check3(x,y);
@@ -802,17 +611,13 @@ public class Othello implements ActionListener, MouseListener {
 							check6(x,y);
 							check7(x,y);
 							check8(x,y);
-							if(valid == true){
 							if(turn_int == P1){
+								board[x][y].setIcon(p1piece);
 								turn_int = P2;
 							}
 							else{
+								board[x][y].setIcon(p2piece);
 								turn_int = P1;
-							}
-							valid = false;
-							}
-							else{
-								//Invalid Move
 							}
 						}
 					}
@@ -839,11 +644,6 @@ public class Othello implements ActionListener, MouseListener {
 					check6(x,y);
 					check7(x,y);
 					check8(x,y);
-					if(valid == true)
-					{
-						turn_int = P1;
-						break;
-					}
 				}
 			}
 		}
