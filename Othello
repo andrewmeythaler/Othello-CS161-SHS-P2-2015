@@ -89,6 +89,7 @@ public class Othello implements ActionListener, MouseListener {
 			{
 				board[x][y] = new JButton();
 				tiles[x][y] = new Piece();
+				tiles[x][y].setPlayer(BLANK);
 				center.add(board[x][y]);
 				board[x][y].addActionListener(this);
 				board[x][y].addMouseListener(this);
@@ -115,7 +116,7 @@ public class Othello implements ActionListener, MouseListener {
 		reset();
 		try 
 		{
-		Image blankimg = ImageIO.read(new File("Blank.bmp"));
+		Image blankimg = ImageIO.read(new File("Blank.png"));
 		System.out.println(blankimg);
 		//Image blankimgrs = blankimg.getScaledInstance(((int)(board[0][0].getSize().getWidth())), ((int)(board[0][0].getSize().getHeight())), Image.SCALE_SMOOTH);
 		blankpiece = new ImageIcon(blankimg);
@@ -186,11 +187,14 @@ public class Othello implements ActionListener, MouseListener {
 			for (int y = 0; y < board[0].length; y++) {
 				if(Green == true){
 					board[x][y].setBackground(Color.GREEN);
+					board[x][y].setIcon(blankpiece);
 					tiles[x][y].setPlayer(BLANK);
 					Green = false;
 				}
 				else{
 					board[x][y].setBackground(Color.WHITE);
+					board[x][y].setIcon(blankpiece);
+					tiles[x][y].setPlayer(BLANK);
 					Green = true;
 				}
 				board[x][y].setEnabled(true);
@@ -468,7 +472,7 @@ public class Othello implements ActionListener, MouseListener {
 		 * OOOOO	O/OOO	OXOOO
 		 * XOOOO    XOOOO	XOOOO
 		 */
-		if(x < 8-y)
+		if(x < 7-y)
 		{
 			row.clear();
 			for(int a = 0; a < x; a++)
@@ -493,7 +497,7 @@ public class Othello implements ActionListener, MouseListener {
 		else
 		{
 			row.clear();
-			for(int a = 0; a < 8-y; a++)
+			for(int a = 0; a < 7-y; a++)
 			{
 				if(tiles[x-a][y+a].getPlayer() != BLANK)
 				{
@@ -525,7 +529,7 @@ public class Othello implements ActionListener, MouseListener {
 		if(x > y)
 		{
 			row.clear();
-			for(int a = 0; a < 8-x; a++)
+			for(int a = 0; a < 7-x; a++)
 			{
 				if(tiles[x+a][y+a].getPlayer() != BLANK)
 				{
@@ -547,7 +551,7 @@ public class Othello implements ActionListener, MouseListener {
 		else
 		{
 			row.clear();
-			for(int a = 0; a < 8-y; a++)
+			for(int a = 0; a < 7-y; a++)
 			{
 				if(tiles[x+a][y+a].getPlayer() != BLANK)
 				{
@@ -636,14 +640,100 @@ public class Othello implements ActionListener, MouseListener {
 			{
 				for(int y = 0; y < board[0].length; y++)
 				{
-					check1(x,y);
-					check2(x,y);
-					check3(x,y);
-					check4(x,y);
-					check5(x,y);
-					check6(x,y);
-					check7(x,y);
-					check8(x,y);
+					if(tiles[x][y].getPlayer() != BLANK)
+					{
+						if(x > 0 && tiles[x-1][y].getPlayer() == BLANK)
+						{
+							tiles[x-1][y].setPlayer(P2);
+							board[x+1][y].setIcon(p2piece);
+							check1(x-1,y);
+							check2(x-1,y);
+							check3(x-1,y);
+							check4(x-1,y);
+							check5(x-1,y);
+							check6(x-1,y);
+							check7(x-1,y);
+							check8(x-1,y);
+						}
+						else if(x < 7 && tiles[x+1][y].getPlayer() == BLANK)
+						{
+							tiles[x+1][y].setPlayer(P2);
+							board[x+1][y].setIcon(p2piece);
+							check1(x+1,y);
+							check2(x+1,y);
+							check3(x+1,y);
+							check4(x+1,y);
+							check5(x+1,y);
+							check6(x+1,y);
+							check7(x+1,y);
+							check8(x+1,y);
+						}
+						else if(y < 7 && tiles[x][y+1].getPlayer() == BLANK)
+						{
+							tiles[x][y+1].setPlayer(P2);
+							board[x][y+1].setIcon(p2piece);
+							check1(x,y+1);
+							check2(x,y+1);
+							check3(x,y+1);
+							check4(x,y+1);
+							check5(x,y+1);
+							check6(x,y+1);
+							check7(x,y+1);
+							check8(x,y+1);
+						}
+						else if(y > 0 && tiles[x][y-1].getPlayer() == BLANK)
+						{
+							tiles[x][y-1].setPlayer(P2);
+							board[x][y-1].setIcon(p2piece);
+							check1(x,y-1);
+							check2(x,y-1);
+							check3(x,y-1);
+							check4(x,y-1);
+							check5(x,y-1);
+							check6(x,y-1);
+							check7(x,y-1);
+							check8(x,y-1);
+						}
+						else if(y > 0 && x > 0 && tiles[x-1][y-1].getPlayer() == BLANK)
+						{
+							tiles[x-1][y-1].setPlayer(P2);
+							board[x-1][y-1].setIcon(p2piece);
+							check1(x-1,y-1);
+							check2(x-1,y-1);
+							check3(x-1,y-1);
+							check4(x-1,y-1);
+							check5(x-1,y-1);
+							check6(x-1,y-1);
+							check7(x-1,y-1);
+							check8(x-1,y-1);
+						}
+						else if(y > 0 && x < 7 && tiles[x+1][y-1].getPlayer() == BLANK)
+						{
+							tiles[x+1][y-1].setPlayer(P2);
+							board[x+1][y-1].setIcon(p2piece);
+							check1(x+1,y-1);
+							check2(x+1,y-1);
+							check3(x+1,y-1);
+							check4(x+1,y-1);
+							check5(x+1,y-1);
+							check6(x+1,y-1);
+							check7(x+1,y-1);
+							check8(x+1,y-1);
+						}
+						else if(y < 7 && x < 7 && tiles[x+1][y-1].getPlayer() == BLANK)
+						{
+							tiles[x+1][y+1].setPlayer(P2);
+							board[x+1][y+1].setIcon(p2piece);
+							check1(x+1,y+1);
+							check2(x+1,y+1);
+							check3(x+1,y+1);
+							check4(x+1,y+1);
+							check5(x+1,y+1);
+							check6(x+1,y+1);
+							check7(x+1,y+1);
+							check8(x+1,y+1);
+						}
+					}
 				}
 			}
 		}
@@ -698,4 +788,3 @@ public class Othello implements ActionListener, MouseListener {
 		}
 	}
 }
-
